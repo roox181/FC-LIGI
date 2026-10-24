@@ -13,13 +13,15 @@ const {
 } = require("./matches");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const players = ["Alkım", "Buğra", "Osman", "Mustafa"];
 const FIXTURE_FILE = path.join(__dirname, "fixtures.json");
 
 if (!process.env.ADMIN_PASSWORD || !process.env.SESSION_SECRET) {
-    console.error("HATA: .env dosyasında ADMIN_PASSWORD veya SESSION_SECRET eksik.");
+    console.error(
+        "HATA: ADMIN_PASSWORD veya SESSION_SECRET tanımlanmamış."
+    );
     process.exit(1);
 }
 
@@ -32,8 +34,8 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        sameSite: "strict",
-        secure: false,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
         maxAge: 2 * 60 * 60 * 1000
     }
 }));
@@ -86,21 +88,24 @@ function shuffle(array) {
     return result;
 }
 
-// Her oyuncunun diğer oyuncularla bir kez oynadığı
-// üç turluk fikstür oluştur.
+// Her oyuncunun diğer oyuncularla bir kez oynadığı fikstür.
 function generateFixture() {
     const shuffledPlayers = shuffle(players);
     const rounds = [];
 
-    // Tek sayıda oyuncu olmadığı için 3 tur yeterli.
-    for (let roundIndex = 0; roundIndex < shuffledPlayers.length - 1; roundIndex++) {
+    for (
+        let roundIndex = 0;
+        roundIndex < shuffledPlayers.length - 1;
+        roundIndex++
+    ) {
         const roundMatches = [];
 
         for (let i = 0; i < shuffledPlayers.length / 2; i++) {
             const first = shuffledPlayers[i];
-            const second = shuffledPlayers[shuffledPlayers.length - 1 - i];
+            const second = shuffledPlayers[
+                shuffledPlayers.length - 1 - i
+            ];
 
-            // Ev sahibi/deplasman sırasını rastgele seç.
             const homeFirst = Math.random() < 0.5;
 
             roundMatches.push({
@@ -114,7 +119,6 @@ function generateFixture() {
             matches: roundMatches
         });
 
-        // İlk oyuncu sabit kalır, diğer oyuncular döndürülür.
         const fixedPlayer = shuffledPlayers[0];
         const rotatingPlayers = shuffledPlayers.slice(1);
 
@@ -162,7 +166,7 @@ app.post("/api/admin/login", (req, res, next) => {
     });
 });
 
-// Giriş durumunu kontrol et.
+// Yönetici giriş durumunu kontrol et.
 app.get("/api/admin/status", (req, res) => {
     res.json({
         isAdmin: req.session?.isAdmin === true
@@ -176,15 +180,15 @@ app.post("/api/admin/logout", (req, res, next) => {
 
         res.clearCookie("fc_ligi_session", {
             httpOnly: true,
-            sameSite: "strict",
-            secure: false
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production"
         });
 
         res.json({ message: "Çıkış yapıldı." });
     });
 });
 
-// Yönetici panelini statik dosyalardan önce koru.
+// Yönetici paneli: giriş yapmamış kullanıcıya HTML gönderme.
 app.get("/admin-panel.html", requireAdmin, (req, res) => {
     res.sendFile(path.join(__dirname, "admin-panel.html"));
 });
@@ -194,11 +198,7 @@ app.get("/api/fixtures", (req, res) => {
     try {
         const fixture = loadFixture();
 
-        if (!fixture) {
-            return res.json({ rounds: [] });
-        }
-
-        res.json(fixture);
+        res.json(fixture || { rounds: [] });
     } catch (error) {
         console.error("Fikstür okunamadı:", error);
         res.status(500).json({
@@ -212,7 +212,6 @@ app.post("/api/fixtures", requireAdmin, (req, res) => {
     try {
         const requestedPlayers = req.body?.players;
 
-        // İstemciden gelen oyuncu listesini doğrula.
         if (
             !Array.isArray(requestedPlayers) ||
             requestedPlayers.length !== players.length ||
@@ -236,7 +235,7 @@ app.post("/api/fixtures", requireAdmin, (req, res) => {
     }
 });
 
-// Maçları getir.
+// Maçları herkes görüntüleyebilir.
 app.get("/api/matches", (req, res) => {
     try {
         res.json(loadMatches());
@@ -248,7 +247,7 @@ app.get("/api/matches", (req, res) => {
     }
 });
 
-// Puan tablosunu getir.
+// Puan tablosu.
 app.get("/api/standings", (req, res) => {
     try {
         res.json(calculateStandings(loadMatches()));
@@ -263,7 +262,12 @@ app.get("/api/standings", (req, res) => {
 // Yeni maç kaydet — yalnızca yönetici.
 app.post("/api/matches", requireAdmin, (req, res) => {
     try {
-        const { home, away, homeGoals, awayGoals } = req.body || {};
+        const {
+            home,
+            away,
+            homeGoals,
+            awayGoals
+        } = req.body || {};
 
         if (
             !players.includes(home) ||
@@ -339,10 +343,15 @@ app.delete("/api/matches/:index", requireAdmin, (req, res) => {
     }
 });
 
-// Statik dosyaları korumalı yönetici rotasından sonra sun.
+// Gizli dosyaları ve yönetici panelini statik sunumdan hariç tut.
 app.use(express.static(__dirname, {
     index: "index.html",
-    dotfiles: "ignore"
+    dotfiles: "ignore",
+    setHeaders(res, filePath) {
+        if (path.basename(filePath) === "admin-panel.html") {
+            res.statusCode = 404;
+        }
+    }
 }));
 
 // Genel hata yönetimi.
@@ -356,9 +365,9 @@ app.use((error, req, res, next) => {
     });
 });
 
-// Sunucuyu başlat.
-const server = app.listen(PORT, "127.0.0.1", () => {
-    console.log(`FC Ligi: http://127.0.0.1:${PORT}`);
+// Render için dış bağlantıları dinle.
+const server = app.listen(PORT, "0.0.0.0", () => {
+    console.log(`FC Ligi sunucusu ${PORT} portunda çalışıyor.`);
 });
 
 server.on("error", (error) => {
