@@ -1,0 +1,836 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC Ligi | League Center</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+    --bg: #090e17;
+    --panel: #111925;
+    --panel2: #151f2d;
+    --border: #243143;
+    --muted: #8290a4;
+    --green: #a3ff6f;
+    --white: #f4f7fb;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: radial-gradient(ellipse at 70% -15%, #18352b 0%, transparent 38%), var(--bg);
+    color: var(--white);
+    font-family: Inter, Arial, sans-serif;
+    min-height: 100vh;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 225px minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+.sidebar {
+    padding: 28px 18px;
+    border-right: 1px solid var(--border);
+    background: rgba(10,16,26,.85);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 19px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 48px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    background: var(--green);
+    color: #101a13;
+    font-size: 23px;
+}
+
+.small-label {
+    font-size: 10px;
+    color: #68778c;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin: 25px 10px 12px;
+}
+
+.nav {
+    display: block;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    padding: 13px 12px;
+    color: var(--muted);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 13px;
+    margin: 5px 0;
+    background: transparent;
+}
+
+.nav:hover, .nav.active {
+    color: var(--green);
+    background: #a3ff6f12;
+    border-color: #a3ff6f20;
+}
+
+.sidebar-bottom {
+    margin-top: 70px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: var(--panel);
+}
+
+.sidebar-bottom strong { font-size: 12px; }
+
+.sidebar-bottom p {
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+main {
+    width: 100%;
+    max-width: 1450px;
+    margin: auto;
+    padding: 35px clamp(18px, 4vw, 55px);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 32px;
+}
+
+.eyebrow {
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+h1 {
+    font-size: clamp(27px, 4vw, 39px);
+    letter-spacing: -1.8px;
+    margin: 8px 0;
+}
+
+.subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0;
+}
+
+.season {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    padding: 12px 15px;
+    color: #cbd5e1;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    border: 1px solid #35483c;
+    border-radius: 18px;
+    background: radial-gradient(ellipse at 90% 50%, #a3ff6f19, transparent 43%), linear-gradient(110deg, #172b27, #101b25 70%);
+    margin-bottom: 24px;
+}
+
+.hero::after {
+    content: "⚽";
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%) rotate(-18deg);
+    font-size: clamp(75px, 11vw, 135px);
+    opacity: .85;
+    filter: drop-shadow(0 15px 30px #0008);
+}
+
+.hero h2 {
+    font-size: clamp(21px, 3vw, 30px);
+    max-width: 440px;
+    line-height: 1.25;
+    letter-spacing: -1px;
+    margin: 13px 0;
+}
+
+.hero p {
+    font-size: 12px;
+    color: #a8b8b0;
+    line-height: 1.8;
+    max-width: 380px;
+}
+
+.hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #a3ff6f16;
+    border: 1px solid #a3ff6f35;
+    color: var(--green);
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 15px;
+    margin-bottom: 27px;
+}
+
+.metric {
+    padding: 19px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+}
+
+.metric-label { color: var(--muted); font-size: 11px; }
+
+.metric-value {
+    font-size: 27px;
+    font-weight: 800;
+    margin: 13px 0 7px;
+    letter-spacing: -1px;
+}
+
+.metric-note { color: #7f8ca0; font-size: 10px; }
+
+.section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 30px 0 15px;
+}
+
+.section-head h2 {
+    font-size: 17px;
+    letter-spacing: -.5px;
+    margin: 0;
+}
+
+.section-head span { font-size: 10px; color: var(--muted); }
+
+.content-grid {
+    display: grid;
+    grid-template-columns: minmax(0,1.7fr) minmax(230px,.8fr);
+    gap: 20px;
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.table-wrap { overflow-x: auto; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+thead { background: #ffffff04; }
+
+th {
+    color: #78879b;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 16px 12px;
+}
+
+td {
+    padding: 17px 12px;
+    border-top: 1px solid #243143a8;
+    font-size: 12px;
+}
+
+tbody tr { transition: background .2s; }
+tbody tr:hover { background: #ffffff05; }
+
+.rank { color: #8190a4; font-weight: 700; width: 35px; }
+
+.player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+}
+
+.avatar {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    background: #233143;
+    color: #dce8f7;
+    font-weight: 800;
+    font-size: 11px;
+}
+
+.points { color: var(--green); font-size: 15px; font-weight: 900; }
+.goal { color: #b7c3d2; font-weight: 600; }
+
+.form { display: flex; gap: 4px; align-items: center; }
+
+.form span {
+    width: 20px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 5px;
+    background: #202b39;
+    color: #8290a4;
+    font-size: 10px;
+}
+
+.panel-title {
+    padding: 19px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.match {
+    padding: 17px;
+    border-bottom: 1px solid #243143a8;
+}
+
+.match:last-child { border-bottom: 0; }
+
+.match-top {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 10px;
+    margin-bottom: 14px;
+}
+
+.match-team {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    margin: 12px 0;
+}
+
+.match-team strong { font-size: 13px; }
+
+.empty {
+    padding: 25px 17px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.footer {
+    color: #637187;
+    font-size: 10px;
+    text-align: center;
+    padding: 30px 0 10px;
+}
+
+.fixture-round { padding: 17px; border-bottom: 1px solid var(--border); }
+.fixture-round:last-child { border-bottom: 0; }
+
+.fixture-game {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 12px;
+}
+
+.fixture-game span:last-child { color: var(--muted); }
+
+.view { display: none; }
+.view.active { display: block; }
+
+@media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+        padding: 15px 20px;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+    }
+    .logo { margin: 0; }
+    .sidebar .small-label, .sidebar-bottom { display: none; }
+    .sidebar nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 12px;
+    }
+    .nav { width: auto; margin: 0; }
+    main { padding-top: 25px; }
+    .content-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 520px) {
+    .season { display: none; }
+    .hero { padding: 22px; }
+    .hero::after { right: 1%; opacity: .35; }
+    .metrics { gap: 8px; }
+    .metric { padding: 12px; }
+    .metric-value { font-size: 22px; }
+    .metric-label { font-size: 10px; }
+    .metric-note { font-size: 9px; }
+    th, td { padding: 13px 9px; }
+    .fixture-game { flex-direction: column; }
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+    <aside class="sidebar">
+        <div class="logo" id="secret-admin-trigger" title="FC Ligi">
+            <div class="logo-icon">⚽</div>
+            <div>FC<span style="color:var(--green)">.</span>LİGİ</div>
+        </div>
+
+        <div class="small-label">ANA MENÜ</div>
+        <nav aria-label="Ana menü">
+            <button class="nav active" data-view="standings">▦ &nbsp; Lig Tablosu</button>
+            <button class="nav" data-view="history">◷ &nbsp; Maç Geçmişi</button>
+            <button class="nav" data-view="players">♛ &nbsp; Oyuncular</button>
+        </nav>
+
+        <div class="small-label">LİG BİLGİSİ</div>
+        <nav aria-label="Lig bilgisi">
+            <button class="nav" data-view="rules">◎ &nbsp; Puan Sistemi</button>
+            <button class="nav" data-view="fixtures">🎲 &nbsp; Fikstür</button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <strong>🏆 Şampiyonluk yarışı</strong>
+            <p>Her maç önemli. Puanını topla, zirveye yüksel ve kupayı kazan.</p>
+        </div>
+    </aside>
+
+    <main>
+        <header class="topbar">
+            <div>
+                <div class="eyebrow">LEAGUE CENTER / 001</div>
+                <h1 id="page-title">Lig Merkezi<span style="color:var(--green)">.</span></h1>
+                <p class="subtitle" id="page-subtitle">Rekabet başlasın. Zirvede yalnızca bir kişi olacak.</p>
+            </div>
+            <div class="season">● &nbsp; SEZON 01</div>
+        </header>
+
+        <section class="view active" id="view-standings">
+            <section class="hero">
+                <div class="hero-tag">⚡ ARKADAŞLAR LİGİ</div>
+                <h2>4 oyuncu.<br>Tek şampiyon.</h2>
+                <p>Her golün, her puanın ve her maçın önemi var. Mücadele başlasın.</p>
+            </section>
+
+            <section class="metrics">
+                <div class="metric">
+                    <div class="metric-label">👥 LİG OYUNCUSU</div>
+                    <div class="metric-value" id="player-count">4</div>
+                    <div class="metric-note">Şampiyonluk için yarışıyor</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">⚽ OYNANAN MAÇ</div>
+                    <div class="metric-value" id="match-count">00</div>
+                    <div class="metric-note">Oynanan maç sayısı</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">🏆 LİDERİN PUANI</div>
+                    <div class="metric-value" id="leader-points" style="color:var(--green)">00</div>
+                    <div class="metric-note">Zirve yarışı çok yakın</div>
+                </div>
+            </section>
+
+            <div class="content-grid">
+                <section>
+                    <div class="section-head"><h2>🏆 Lig Sıralaması</h2><span>CANLI TABLO</span></div>
+                    <div class="panel table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>#</th><th>OYUNCU</th><th>O</th><th>G</th><th>B</th><th>M</th><th>AV</th><th>SON 3</th><th>PUAN</th></tr>
+                            </thead>
+                            <tbody id="standings-body">
+                                <tr><td colspan="9" class="empty">Puan tablosu yükleniyor...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="section-head"><h2>Son Maçlar</h2><span>MAÇ MERKEZİ</span></div>
+                    <div class="panel">
+                        <div class="panel-title">📋 Maç Geçmişi</div>
+                        <div id="recent-matches"><div class="empty">Maçlar yükleniyor...</div></div>
+                    </div>
+
+                    <div class="section-head"><h2>Lig Kuralları</h2></div>
+                    <div class="panel">
+                        <div class="match">
+                            <div class="match-top"><span>GALİBİYET</span><span style="color:var(--green)">+3 PUAN</span></div>
+                            <div class="match-team"><span>Kazanan oyuncu</span><strong style="color:var(--green)">3</strong></div>
+                        </div>
+                        <div class="match">
+                            <div class="match-top"><span>BERABERLİK</span><span>+1 PUAN</span></div>
+                            <div class="match-team"><span>İki oyuncu da</span><strong>1</strong></div>
+                        </div>
+                        <div class="match">
+                            <div class="match-top"><span>MAĞLUBİYET</span><span>0 PUAN</span></div>
+                            <div class="match-team"><span>Kaybeden oyuncu</span><strong>0</strong></div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section class="view" id="view-history">
+            <div class="section-head"><h2>◷ Tüm Maç Geçmişi</h2><span>KAYITLI SONUÇLAR</span></div>
+            <div class="panel" id="all-matches"><div class="empty">Maçlar yükleniyor...</div></div>
+        </section>
+
+        <section class="view" id="view-players">
+            <div class="section-head"><h2>♛ Lig Oyuncuları</h2><span>4 OYUNCU</span></div>
+            <div class="panel" id="players-list"><div class="empty">Oyuncular yükleniyor...</div></div>
+        </section>
+
+        <section class="view" id="view-rules">
+            <div class="section-head"><h2>◎ Puan Sistemi</h2></div>
+            <div class="panel">
+                <div class="match">
+                    <div class="match-top"><span>GALİBİYET</span><span style="color:var(--green)">+3 PUAN</span></div>
+                    <p class="subtitle">Kazanan oyuncu 3 puan alır.</p>
+                </div>
+                <div class="match">
+                    <div class="match-top"><span>BERABERLİK</span><span>+1 PUAN</span></div>
+                    <p class="subtitle">İki oyuncu da 1 puan alır.</p>
+                </div>
+                <div class="match">
+                    <div class="match-top"><span>MAĞLUBİYET</span><span>0 PUAN</span></div>
+                    <p class="subtitle">Kaybeden oyuncu puan alamaz.</p>
+                </div>
+                <div class="match">
+                    <strong>Lig sıralaması:</strong>
+                    <p class="subtitle">Önce puan, ardından averaj ve atılan gol değerlendirilir.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="view" id="view-fixtures">
+            <div class="section-head"><h2>🎲 Lig Fikstürü</h2><span>TEK DEVRELİ LİG</span></div>
+            <div class="panel">
+                <div class="match">
+                    <p class="subtitle">Admin tarafından oluşturulan fikstür burada görüntülenir. Yeni fikstür oluşturma yetkisi yalnızca yöneticidedir.</p>
+                    <p class="subtitle" id="fixture-status" aria-live="polite" style="margin-top:12px">Kayıtlı fikstür yükleniyor...</p>
+                </div>
+                <div id="fixture-list"><div class="empty">Fikstür yükleniyor...</div></div>
+            </div>
+        </section>
+
+        <footer class="footer">FC LİGİ © 2026 · ARKADAŞLAR LİGİ · REKABET BAŞLASIN</footer>
+    </main>
+</div>
+
+<script>
+"use strict";
+
+const defaultPlayers = ["Alkım", "Buğra", "Osman", "Mustafa"];
+
+const titles = {
+    standings: ["Lig Merkezi", "Rekabet başlasın. Zirvede yalnızca bir kişi olacak."],
+    history: ["Maç Geçmişi", "Ligde oynanan tüm maç sonuçları."],
+    players: ["Oyuncular", "Ligde mücadele eden oyuncular."],
+    rules: ["Puan Sistemi", "Puanların nasıl hesaplandığını incele."],
+    fixtures: ["Lig Fikstürü", "Admin tarafından oluşturulan fikstür."]
+};
+
+let currentMatches = [];
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+
+// Menü geçişleri
+document.querySelectorAll(".nav[data-view]").forEach(button => {
+    button.addEventListener("click", () => {
+        const viewName = button.dataset.view;
+
+        document.querySelectorAll(".nav[data-view]").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
+
+        button.classList.add("active");
+        document.getElementById(`view-${viewName}`).classList.add("active");
+
+        document.getElementById("page-title").innerHTML =
+            `${titles[viewName][0]}<span style="color:var(--green)">.</span>`;
+
+        document.getElementById("page-subtitle").textContent = titles[viewName][1];
+
+        if (viewName === "history") renderAllMatches();
+        if (viewName === "players") renderPlayers();
+        if (viewName === "fixtures") loadFixture();
+    });
+});
+
+// Gizli admin girişi: logoya 5 kez tıklama
+let logoClickCount = 0;
+let logoClickTimer = null;
+
+document.getElementById("secret-admin-trigger").addEventListener("click", () => {
+    logoClickCount++;
+
+    clearTimeout(logoClickTimer);
+
+    if (logoClickCount >= 5) {
+        logoClickCount = 0;
+        window.location.href = "/admin.html";
+        return;
+    }
+
+    logoClickTimer = setTimeout(() => {
+        logoClickCount = 0;
+    }, 2500);
+});
+
+function renderMatchCard(match, index, includeDate = true) {
+    const date = match.date
+        ? new Date(match.date).toLocaleDateString("tr-TR")
+        : `Maç ${index + 1}`;
+
+    return `
+        <div class="match">
+            <div class="match-top">
+                <span>${includeDate ? escapeHTML(date) : `MAÇ ${index + 1}`}</span>
+                <span>TAMAMLANDI</span>
+            </div>
+            <div class="match-team">
+                <strong>${escapeHTML(match.home)}</strong>
+                <span class="score">${Number(match.homeGoals)} : ${Number(match.awayGoals)}</span>
+                <strong>${escapeHTML(match.away)}</strong>
+            </div>
+        </div>`;
+}
+
+function renderRecentMatches() {
+    const target = document.getElementById("recent-matches");
+
+    if (!currentMatches.length) {
+        target.innerHTML = '<div class="empty">Henüz maç oynanmadı.</div>';
+        return;
+    }
+
+    target.innerHTML = [...currentMatches].reverse().slice(0, 5)
+        .map((match, index) => renderMatchCard(match, currentMatches.length - index))
+        .join("");
+}
+
+function renderAllMatches() {
+    const target = document.getElementById("all-matches");
+
+    if (!currentMatches.length) {
+        target.innerHTML = '<div class="empty">Henüz maç oynanmadı.</div>';
+        return;
+    }
+
+    target.innerHTML = [...currentMatches].reverse()
+        .map((match, index) => renderMatchCard(match, currentMatches.length - index))
+        .join("");
+}
+
+function renderPlayers() {
+    const target = document.getElementById("players-list");
+
+    target.innerHTML = defaultPlayers.map(name => {
+        const playedMatches = currentMatches.filter(
+            match => match.home === name || match.away === name
+        );
+
+        const wins = playedMatches.filter(match =>
+            (match.home === name && match.homeGoals > match.awayGoals) ||
+            (match.away === name && match.awayGoals > match.homeGoals)
+        ).length;
+
+        return `
+            <div class="match">
+                <div class="match-team">
+                    <strong>${escapeHTML(name)}</strong>
+                    <span>${playedMatches.length} maç · ${wins} galibiyet</span>
+                </div>
+            </div>`;
+    }).join("");
+}
+
+async function loadStandings() {
+    const tableBody = document.getElementById("standings-body");
+
+    try {
+        const response = await fetch("/api/standings");
+
+        if (!response.ok) throw new Error("Puan tablosu alınamadı.");
+
+        const players = await response.json();
+
+        document.getElementById("player-count").textContent = players.length;
+
+        document.getElementById("match-count").textContent =
+            players.length > 0
+                ? players.reduce((total, player) => total + player.played, 0) / 2
+                : 0;
+
+        document.getElementById("leader-points").textContent =
+            players.length > 0 ? players[0].points : 0;
+
+        tableBody.innerHTML = players.map((player, index) => `
+            <tr>
+                <td class="rank">${String(index + 1).padStart(2, "0")}</td>
+                <td>
+                    <div class="player">
+                        <div class="avatar">${escapeHTML(player.name.charAt(0))}</div>
+                        ${escapeHTML(player.name)}
+                    </div>
+                </td>
+                <td>${player.played}</td>
+                <td>${player.wins}</td>
+                <td>${player.draws}</td>
+                <td>${player.losses}</td>
+                <td class="goal">${player.goalDifference > 0 ? "+" : ""}${player.goalDifference}</td>
+                <td><div class="form"><span>—</span><span>—</span><span>—</span></div></td>
+                <td class="points">${player.points}</td>
+            </tr>
+        `).join("");
+    } catch (error) {
+        console.error("Puan tablosu hatası:", error);
+        tableBody.innerHTML =
+            '<tr><td colspan="9" class="empty">Puan tablosu yüklenemedi. Sunucuyu kontrol et.</td></tr>';
+    }
+}
+
+async function loadMatches() {
+    try {
+        const response = await fetch("/api/matches");
+
+        if (!response.ok) throw new Error("Maç geçmişi alınamadı.");
+
+        currentMatches = await response.json();
+
+        renderRecentMatches();
+
+        if (document.getElementById("view-history").classList.contains("active")) {
+            renderAllMatches();
+        }
+
+        if (document.getElementById("view-players").classList.contains("active")) {
+            renderPlayers();
+        }
+    } catch (error) {
+        console.error("Maç geçmişi hatası:", error);
+
+        document.getElementById("recent-matches").innerHTML =
+            '<div class="empty">Maç geçmişi yüklenemedi.</div>';
+
+        document.getElementById("all-matches").innerHTML =
+            '<div class="empty">Maç geçmişi yüklenemedi.</div>';
+    }
+}
+
+// Fikstürü sunucudan oku. Ana sayfada oluşturma işlemi yok.
+async function loadFixture() {
+    const target = document.getElementById("fixture-list");
+    const status = document.getElementById("fixture-status");
+
+    status.textContent = "Kayıtlı fikstür yükleniyor...";
+
+    try {
+        const response = await fetch("/api/fixtures");
+
+        if (!response.ok) throw new Error("Fikstür yüklenemedi.");
+
+        const fixture = await response.json();
+
+        if (!Array.isArray(fixture.rounds) || fixture.rounds.length === 0) {
+            target.innerHTML = '<div class="empty">Henüz admin tarafından fikstür oluşturulmadı.</div>';
+            status.textContent = "Fikstür henüz hazır değil.";
+            return;
+        }
+
+        target.innerHTML = fixture.rounds.map((round, index) => `
+            <div class="fixture-round">
+                <div class="match-top">
+                    <strong>${escapeHTML(round.name || `${index + 1}. Tur`)}</strong>
+                    <span>${Array.isArray(round.matches) ? round.matches.length : 0} maç</span>
+                </div>
+                ${(Array.isArray(round.matches) ? round.matches : []).map(game => `
+                    <div class="fixture-game">
+                        <strong>${escapeHTML(game.home)} — ${escapeHTML(game.away)}</strong>
+                        <span>Oynanmadı</span>
+                    </div>
+                `).join("")}
+            </div>
+        `).join("");
+
+        status.textContent = "✓ Admin tarafından oluşturulan fikstür gösteriliyor.";
+    } catch (error) {
+        console.error("Fikstür yükleme hatası:", error);
+        target.innerHTML = '<div class="empty">Fikstür yüklenemedi. Sunucuyu kontrol et.</div>';
+        status.textContent = error.message;
+    }
+}
+
+async function init() {
+    await Promise.all([
+        loadStandings(),
+        loadMatches()
+    ]);
+}
+
+init();
+</script>
+</body>
+</html>

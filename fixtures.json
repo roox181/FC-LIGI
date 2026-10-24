@@ -1,0 +1,44 @@
+{
+  "rounds": [
+    {
+      "name": "1. Tur",
+      "matches": [
+        {
+          "home": "Osman",
+          "away": "Buğra"
+        },
+        {
+          "home": "Alkım",
+          "away": "Mustafa"
+        }
+      ]
+    },
+    {
+      "name": "2. Tur",
+      "matches": [
+        {
+          "home": "Buğra",
+          "away": "Alkım"
+        },
+        {
+          "home": "Osman",
+          "away": "Mustafa"
+        }
+      ]
+    },
+    {
+      "name": "3. Tur",
+      "matches": [
+        {
+          "home": "Mustafa",
+          "away": "Buğra"
+        },
+        {
+          "home": "Alkım",
+          "away": "Osman"
+        }
+      ]
+    }
+  ],
+  "createdAt": "2026-10-24T08:51:11.236Z"
+}
